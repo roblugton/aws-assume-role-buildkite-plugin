@@ -4,8 +4,16 @@ set -o pipefail
 set -u
 
 main() {
+  local debug="${BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_DEBUG:-}"
   local role="${BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_ROLE:-}"
   local build="${BUILDKITE_BUILD_NUMBER:-}"
+
+ if [[ -n $debug ]]; then
+    echo "BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_DEBUG: $debug"
+    echo "BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_ROLE: $role"
+    echo "BUILDKITE_BUILD_NUMBER: $build"
+  fi 
+
 
   if [[ -n $role && -n $build ]]; then
     echo "~~~ Assuming IAM role $role ..."
