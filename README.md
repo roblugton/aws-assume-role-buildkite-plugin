@@ -1,6 +1,8 @@
 AWS AssumeRole Buildkite Plugin
 ===============================
 
+![CI](https://github.com/peakon/aws-assume-role-buildkite-plugin/workflows/CI/badge.svg?branch=master)
+
 A [Buildkite plugin](https://buildkite.com/docs/agent/plugins) to assume an IAM Role before running the build command.
 
 Credentials for the assumed role are placed in the environment as `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, where they will be found by standard AWS tools and SDKs.
@@ -15,7 +17,7 @@ Example
 steps:
   - command: bin/ci-aws-thing
     plugins:
-      - cultureamp/aws-assume-role#v0.1.0:
+      - peakon/aws-assume-role#v0.1.0:
           role: "arn:aws:iam::123456789012:role/example-role"
 ```
 
@@ -27,7 +29,7 @@ steps:
     env:
       AWS_ASSUME_ROLE_ARN: arn:aws:iam::123456789012:role/example-role
     plugins:
-      - cultureamp/aws-assume-role
+      - peakon/aws-assume-role
 ```
 
 Options

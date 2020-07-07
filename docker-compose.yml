@@ -4,3 +4,13 @@ services:
     image: buildkite/plugin-tester
     volumes:
       - ".:/plugin"
+  lint:
+    image: buildkite/plugin-linter
+    command: ['--id', 'peakon/aws-assume-role']
+    volumes:
+      - ".:/plugin:ro"
+  shellcheck:
+    image: koalaman/shellcheck
+    volumes:
+      - ".:/mnt:ro"
+    working_dir: /mnt
