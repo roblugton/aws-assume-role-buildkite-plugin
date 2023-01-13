@@ -47,6 +47,10 @@ The duration (in seconds) to assume the role for. Defaults to 3600 (1 hour).
 
 Exports `AWS_REGION` and `AWS_DEFAULT_REGION` with the value you set. If not set the values of AWS_REGION and AWS_DEFAULT_REGION will not be changed.
 
+### `session` (optional)
+
+Allows passing in a custom session name to the assume role command. Exports `AWS_ROLE_SESSION_NAME` with the value you set.
+
 Development
 -----------
 

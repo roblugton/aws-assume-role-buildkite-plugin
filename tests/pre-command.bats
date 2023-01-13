@@ -1,9 +1,11 @@
 #!/usr/bin/env bats
 
-load "$BATS_PATH/load.bash"
+setup() {
+  load "$BATS_PLUGIN_PATH/load.bash"
 
-# Uncomment to enable stub debugging
-# export AWS_STUB_DEBUG=/dev/tty
+  # Uncomment to enable stub debugging
+  # export GIT_STUB_DEBUG=/dev/tty
+}
 
 @test "calls aws sts and exports AWS_ env vars" {
   export BUILDKITE_BUILD_NUMBER="42"
@@ -88,5 +90,33 @@ EOF
 
   assert_success
   unstub aws
+}
 
+@test "passes in a custom session name" {
+  export BUILDKITE_BUILD_NUMBER="42"
+  export BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_ROLE="role123"
+  export BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_SESSION="my-session-name"
+
+  stub aws "sts assume-role --role-arn role123 --role-session-name my-session-name --duration-seconds 3600 --query Credentials : cat tests/sts.json"
+
+  run $PWD/hooks/pre-command
+  assert_output --partial "~~~ Assuming IAM role role123 ..."
+  assert_output --partial "AWS_ROLE_SESSION_NAME=my-session-name"
+
+  assert_success
+  unstub aws
+}
+
+@test "does not pass in a custom session name" {
+  export BUILDKITE_BUILD_NUMBER="42"
+  export BUILDKITE_PLUGIN_AWS_ASSUME_ROLE_ROLE="role123"
+
+  stub aws "sts assume-role --role-arn role123 --role-session-name aws-assume-role-buildkite-plugin-42 --duration-seconds 3600 --query Credentials : cat tests/sts.json"
+
+  run $PWD/hooks/pre-command
+  assert_output --partial "~~~ Assuming IAM role role123 ..."
+  refute_output --partial "AWS_ROLE_SESSION_NAME="
+
+  assert_success
+  unstub aws
 }
